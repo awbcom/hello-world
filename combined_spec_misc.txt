@@ -1,4 +1,4 @@
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example alert_actions.conf.  Use this file to configure alert
 # actions for saved searches.
@@ -65,7 +65,7 @@ alert.execute.cmd = java.path
 alert.execute.cmd.arg.1 = -jar
 alert.execute.cmd.arg.2 = $SPLUNK_HOME/etc/apps/myapp/bin/custom.jar
 alert.execute.cmd.arg.3 = --execute 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values for configuring global
 # saved search actions in alert_actions.conf.  Saved searches are configured
@@ -144,11 +144,6 @@ track_alert = [1|0]
 command = <string>
 * The search command (or pipeline) which is responsible for executing
   the action.
-* Generally the command is a template search pipeline which is realized
-  with values from the saved search - to reference saved search
-  field values wrap them in dollar signs ($).
-* For example, to reference the savedsearch name use $name$. To
-  reference the search, use $search$
 
 is_custom = [1|0]
 * Specifies whether the alert action is based on the custom alert 
@@ -219,22 +214,6 @@ message.alert = <string>
 * Specify a custom email message for alerts.
 * Includes the ability to reference attributes from result,
   saved search, or job
-
-subject = <string>
-* Specify an alternate email subject if useNSSubject is false.
-* Defaults to SplunkAlert-<savedsearchname>.
-
-subject.alert = <string>
-* Specify an alternate email subject for an alert.
-* Defaults to SplunkAlert-<savedsearchname>.
-
-subject.report = <string>
-* Specify an alternate email subject for a scheduled report.
-* Defaults to SplunkReport-<savedsearchname>.
-
-useNSSubject = [1|0]
-* Specify whether to use the namespaced subject (i.e subject.report) or
-  subject.
 
 footer.text = <string>
 * Specify an alternate email footer.
@@ -519,7 +498,7 @@ dest = <string>
   "etc/apps/<app>/lookups/<file-name>"
 * The user executing this action MUST have write permissions to the app for
   this action to work properly.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # The following are example app.conf configurations. Configure properties for
 # your custom application.
@@ -539,7 +518,7 @@ author=<author of app>
 description=<textual description of app>
 version=<version of app>
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file maintains the state of a given app in Splunk Enterprise. It may also be used
 # to customize certain aspects of an app.
@@ -586,193 +565,6 @@ description = <string>
 * Short explanatory string displayed underneath the app's title in Launcher.
 * Descriptions should be 200 characters or less because most users won't read
   long descriptions!
-
-author = <name>
-* For apps you intend to post to Splunkbase, enter the username of your
-  splunk.com account.
-* For internal-use-only apps, include your full name and/or contact info
-  (e.g. email).
-
-# Your app can include an icon which will show up next to your app in Launcher
-# and on Splunkbase. You can also include a screenshot, which will show up on
-# Splunkbase when the user views info about your app before downloading it.
-# Icons are recommended, although not required.
-# Screenshots are optional.
-#
-# There is no setting in app.conf for these images. Instead, icon and
-# screenshot images should be placed in the appserver/static dir of
-# your app. They will automatically be detected by Launcher and Splunkbase.
-#
-# For example:
-#
-#     <app_directory>/appserver/static/appIcon.png    (the capital "I" is required!)
-#     <app_directory>/appserver/static/screenshot.png
-#
-# An icon image must be a 36px by 36px PNG file.
-# An app screenshot must be 623px by 350px PNG file.
-
-#
-# [package] defines upgrade-related metadata, and will be
-# used in future versions of Splunk Enterprise to streamline app upgrades.
-#
-
-[package]
-
-id = <appid>
-* id should be omitted for internal-use-only apps which are not intended to be
-  uploaded to Splunkbase
-* id is required for all new apps uploaded to Splunkbase. Future versions of
-  Splunk Enterprise will use appid to correlate locally-installed apps and the
-  same app on Splunkbase (e.g. to notify users about app updates)
-* id must be the same as the folder name in which your app lives in
-  $SPLUNK_HOME/etc/apps
-* id must adhere to cross-platform folder-name restrictions:
-  * must contain only letters, numbers, "." (dot), and "_" (underscore) characters
-  * must not end with a dot character
-  * must not be any of the following names: CON, PRN, AUX, NUL,
-      COM1, COM2, COM3, COM4, COM5, COM6, COM7, COM8, COM9,
-      LPT1, LPT2, LPT3, LPT4, LPT5, LPT6, LPT7, LPT8, LPT9
-
-check_for_updates = <bool>
-* Set whether Splunk Enterprise should check Splunkbase for updates to this app.
-* Defaults to true.
-
-
-#
-# Set install settings for this app
-#
-
-[install]
-
-state = disabled | enabled
-* Set whether app is disabled or enabled.
-* If an app is disabled, its configs are ignored.
-* Defaults to enabled.
-
-state_change_requires_restart = true | false
-* Set whether changing an app's state ALWAYS requires a restart of Splunk Enterprise.
-* State changes include enabling or disabling an app.
-* When set to true, changing an app's state always requires a restart.
-* When set to false, modifying an app's state may or may not require a restart
-  depending on what the app contains. This setting cannot be used to avoid all
-  restart requirements!
-* Defaults to false.
-
-is_configured = true | false
-* Stores indication of whether the application's custom setup has been performed
-* Defaults to false
-
-build = <integer>
-* Required.
-* Must be a positive integer.
-* Increment this whenever you change files in appserver/static.
-* Every release must change both "version" and "build" settings.
-* Ensures browsers don't use cached copies of old static files
-  in new versions of your app.
-* Build is a single integer, unlike version which can be a complex string
-  like 1.5.18.
-
-allows_disable = true | false
-* Set whether an app allows itself to be disabled.
-* Defaults to true.
-
-install_source_checksum = <string>
-* Records a checksum of the tarball from which a given app was installed.
-* Splunk Enterprise will automatically populate this value upon install.
-* You should *not* set this value explicitly within your app!
-
-#
-# Handle reloading of custom .conf files (4.2+ versions only)
-#
-
-[triggers]
-
-reload.<conf_file_name> = [ simple | rest_endpoints | access_endpoints <handler_url> | http_get <handler_url> | http_post <handler_url> ]
-* Splunk Enterprise will reload app configuration after every app-state change:
-  install, update, enable, and disable.
-* If your app does not use a custom config file (e.g. myconffile.conf)
-  then it won't need a [triggers] stanza, because
-  $SPLUNK_HOME/etc/system/default/app.conf already includes a [triggers]
-  stanza which automatically reloads config files normally used by Splunk Enterprise.
-* If your app uses a custom config file (e.g. myconffile.conf) and you want to
-  avoid unnecessary Splunk Enterprise restarts, you'll need to add a reload value in
-  the [triggers] stanza.
-* If you don't include [triggers] settings and your app uses a custom
-  config file, a Splunk Enterprise restart will be required after every state change.
-* Specifying "simple" implies that Splunk Enterprise will take no special action to 
-  reload your custom conf file.
-* Specify "access_endpoints" and a URL to a REST endpoint, and Splunk Enterprise will 
-  call its _reload() method at every app state change.
-* Specify "http_get" and a URL to a REST endpoint, and Splunk Enterprise will simulate 
-  an HTTP GET request against this URL at every app state change.
-* Specify "http_post" and a URL to a REST endpoint, and Splunk Enterprise will simulate 
-  an HTTP POST request against this URL at every app state change.
-* "rest_endpoints" is reserved for Splunk Enterprise internal use for reloading
-  restmap.conf.
-
-* Examples:
-
-        [triggers]
-        * Do not force a restart of Splunk Enterprise for state changes of MyApp
-        * Do not run special code to tell MyApp to reload myconffile.conf
-        * Apps with custom config files will usually pick this option
-        reload.myconffile = simple
-
-        * Do not force a restart of Splunk Enterprise for state changes of MyApp.
-        * Splunk Enterprise calls the /admin/myendpoint/_reload method in my custom EAI handler.
-        * Use this advanced option only if MyApp requires custom code to reload its configuration when its state changes
-        reload.myotherconffile = access_endpoints /admin/myendpoint
-
-#
-# Set UI-specific settings for this app
-#
-
-[ui]
-
-is_visible = true | false
-* Indicates if this app should be visible/navigable as a UI app
-* Apps require at least 1 view to be available from the UI
-
-show_in_nav = true | false
-* Indicates if this app should be shown in glabal app dropdown
-
-is_manageable = true | false
-* Support for this setting has been removed. It no longer has any effect.
-
-label = <string>
-* Defines the name of the app shown in the Splunk Enterprise GUI and Launcher
-* Recommended length between 5 and 80 characters.
-* Must not include "Splunk For" prefix.
-* Label is required.
-* Examples of good labels:
-    IMAP Monitor
-    SQL Server Integration Services
-    FISMA Compliance
-
-docs_section_override = <string>
-* Defines override for auto-generated app-specific documentation links
-* If not specified, app-specific documentation link will
-  include [<app-name>:<app-version>]
-* If specified, app-specific documentation link will
-  include [<docs_section_override>]
-* This only applies to apps with documentation on the Splunk documentation site
-
-attribution_link = <string>
-* URL that users can visit to find third-party software credits and attributions for assets the app uses.
-* External links must start with http:// or https://.
-* Values that do not start with http:// or https:// will be interpreted as Quickdraw "location" strings
-* and translated to internal documentation references.
-
-setup_view = <string>
-* Optional setting
-* Defines custom setup view found within /data/ui/views REST endpoint
-* If not specified, default to setup.xml
-
-#
-# Credential-verification scripting (4.2+ versions only)
-# Credential entries are superseded by passwords.conf from 6.3 onwards.
-# While the entries here are still honored post-6.3, updates to these will occur in passwords.conf which will shadow any values present here.
-#
 
 [credentials_settings]
 verify_script = <string>
@@ -845,7 +637,7 @@ default_gather_lookups = <filename> [, <filename> ...]
   local/app.conf
 * Additional lists can be created with default_gather_lookups-classname = ...
 * Defaults to unset.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example audit.conf.  Use this file to configure auditing.
 #
@@ -866,7 +658,7 @@ publicKey=/some/path/to/your/public/key/public_key.pem
 # If this stanza exists, audit trail events will be cryptographically signed.
 # You must have a private key to encrypt the signatures and a public key to decrypt them.
 # Generate your own keys using openssl in $SPLUNK_HOME/bin/.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values you can use to configure
 # auditing and event signing in audit.conf.
@@ -915,7 +707,7 @@ queueing=[true|false]
 * If this is set to 'false', you MUST add an inputs.conf stanza to tail the
   audit log in order to have the events reach your index.
   * Defaults to true.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example authentication.conf. authentication.conf is used to
 # configure LDAP, Scripted, SAML and Proxy SSO authentication in addition 
@@ -1178,7 +970,7 @@ user = group1;group3
 [userToRoleMap_proxySSO]
 proxy_user1 = user
 proxy_user2 = power;can_delete
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values for configuring
 # authentication via authentication.conf.
@@ -1226,6 +1018,19 @@ authSettings = <authSettings-key>,<authSettings-key>,...
   query their servers when looking for a user.
 * For scripted authentication, <authSettings-key> should be a single 
   stanza name.
+
+[credentials_settings]
+verify_script = <string>
+* Optional setting.
+* Command line to invoke to verify credentials used for this app.
+* For scripts, the command line should include both the interpreter and the
+  script for it to run.
+    * Example: "$SPLUNK_HOME/bin/python" "$SPLUNK_HOME/etc/apps/<myapp>/bin/$MY_SCRIPT"
+* The invoked program is communicated with over standard in / standard out via
+  the same protocol as splunk scripted auth.
+* Paths incorporating variable expansion or explicit spaces must be quoted.
+  * For example, a path including $SPLUNK_HOME should be quoted, as likely
+    will expand to C:\Program Files\Splunk
 
 passwordHashAlgorithm = [SHA512-crypt|SHA256-crypt|SHA512-crypt-<num_rounds>|SHA256-crypt-<num_rounds>|MD5-crypt]
 * For the default "Splunk" authType, this controls how hashed passwords are
@@ -1570,6 +1375,19 @@ redirectPort = <port number>
   instead of the splunkweb port.
 * To prevent any port information to be appended in the
   'assertionConsumerServiceUrl' attribute, set this to 0.
+
+[credentials_settings]
+verify_script = <string>
+* Optional setting.
+* Command line to invoke to verify credentials used for this app.
+* For scripts, the command line should include both the interpreter and the
+  script for it to run.
+    * Example: "$SPLUNK_HOME/bin/python" "$SPLUNK_HOME/etc/apps/<myapp>/bin/$MY_SCRIPT"
+* The invoked program is communicated with over standard in / standard out via
+  the same protocol as splunk scripted auth.
+* Paths incorporating variable expansion or explicit spaces must be quoted.
+  * For example, a path including $SPLUNK_HOME should be quoted, as likely
+    will expand to C:\Program Files\Splunk
 
 idpSSOUrl = <url>
 * REQUIRED
@@ -2081,7 +1899,7 @@ useClientSSLCompression = <bool>
   as long as the server also supports it.
 * If not set, Splunk uses the client SSL compression setting provided in server.conf
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example authorize.conf.  Use this file to configure roles and
 # capabilities.
@@ -2118,7 +1936,7 @@ srchDiskQuota   = 500
 # concurrently (these counts are independent).
 #
 # ninja is allowed to take up 500 megabytes total on disk for all their jobs.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for creating roles in
 # authorize.conf.  You can configure roles and granular access controls by
@@ -2558,7 +2376,7 @@ cumulativeRTSrchJobsQuota = <number>
 [capability::extra_x509_validation]
 * Required to perform additional X509 validation through
   the /server/security/extra-x509-validation.
-#   Version 6.5.1.2 
+#   Version 6.5.Fiction 
 #
 # The following is an example collections.conf configuration.
 #
@@ -2575,7 +2393,7 @@ cumulativeRTSrchJobsQuota = <number>
 field.foo = number
 field.bar = string
 accelerated_fields.myacceleration = {"foo": 1, "bar": -1}
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file configures the KV Store collections for a given app in Splunk.
 #
@@ -2662,7 +2480,7 @@ type = internal_cache|undefined
   will erase the data in the collection.
 * Defaults to 'undefined'.
 * For internal use only.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # Configuration for external search commands
 #
@@ -2730,7 +2548,7 @@ FILENAME = xmlkv.py
 
 [xmlunescape]
 FILENAME = xmlunescape.py
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for creating search
 # commands for any custom search scripts created.  Add your custom search
@@ -3167,7 +2985,7 @@ ACCEPTED in conf:
    [Yep]
    owner = splunk
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # The following are example crawl.conf configurations. Configure properties for
 # crawl.
@@ -3196,7 +3014,7 @@ max_badfiles_per_dir=100
 host = myserver
 subnet = 24
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for configuring crawl.
 #
@@ -3304,7 +3122,7 @@ subnet = <int>
   123.123.123.123, a subnet value of 32, would scan only that host, and a value
   or 24 would scan 123.123.123.*.
 * Defaults to 32.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # Configuration for example datamodels
 #
@@ -3318,7 +3136,7 @@ acceleration.cron_schedule = */10 * * * *
 acceleration.hunk.compression_codec = snappy
 acceleration.hunk.dfs_block_size = 134217728
 acceleration.hunk.file_format = orc
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for configuring
 # data models.  To configure a datamodel for an app, put your custom
@@ -3512,7 +3330,7 @@ dataset.display.datasummary.earliestTime = <time-str>
 dataset.display.datasummary.latestTime = <time-str>
 * The latest time used for the search that powers the datasummary view of 
   the dataset.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file effects how the search assistant (typeahead) shows the syntax for
 # search commands
@@ -3526,7 +3344,7 @@ syntax = <string>
 * The syntax for you syntax type.
 * Should correspond to a regular expression describing the term.
 * Can also be a <field> or other similar value.
-#   Version 6.5.1.2 
+#   Version 6.5.Fiction 
 #
 
 # re-enable the udp input on a SplunkLightForwarder
@@ -3539,7 +3357,7 @@ disabled = false
 [pipeline:tcp]
 disabled = false
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file documents the syntax of default-mode.conf for comprehension and
 # troubleshooting purposes.
@@ -3601,7 +3419,7 @@ disabled_processors = <processor1>, <processor2>
 * Processors which normally would be loaded in this pipeline are not loaded
   if they appear in this list
 * The set of named procoessors is again a splunk-internal design component.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains example patterns for the metadata files default.meta and
 # local.meta
@@ -3611,7 +3429,7 @@ disabled_processors = <processor1>, <processor2>
 # all apps
 []
 export=system
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 #
 # *.meta files contain ownership information, access controls, and export
@@ -3667,7 +3485,7 @@ export = system
 * To make this view available only in this app, set 'export = none' instead.
 owner = admin
 * Set admin as the owner of this view.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # *** REMOVED; NO LONGER USED ***
 #
@@ -3680,7 +3498,7 @@ owner = admin
 # Compatibility:
 # Splunk 4.x Deployment Server is NOT compatible with Splunk 3.x Deployment Clients.
 #
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # Example 1
 # Deployment client receives apps and places them into the same
@@ -3747,7 +3565,7 @@ appEventsResyncIntervalInSecs=86400
 
 [target-broker:deploymentServer]
 targetUri= deploymentserver.splunk.mycompany.com:8089
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values for configuring a
 # deployment client to receive content (apps and configurations) from a
@@ -3940,7 +3758,7 @@ targetUri= <uri>
 
 phoneHomeIntervalInSecs = <nonnegative number>
 * see phoneHomeIntervalInSecs above
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # These are example configurations for distsearch.conf. Use this file to
 # configure distributed search.  For all available attribute/value pairs, see
@@ -3988,7 +3806,7 @@ shareBundles = false
 [searchhead:searcher01]
 mounted_bundles = true
 bundles_location = /opt/shared_bundles/searcher01
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values you can use to configure
 # distributed search.
@@ -4386,7 +4204,7 @@ servers = <comma separated list of servers>
 default = [true|false]
 * Will set this as the default group of peers against which all searches are
   run unless a server-group is not explicitly specified.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 # DO NOT EDIT THIS FILE!
 # Please make all changes to files in $SPLUNK_HOME/etc/system/local.
 # To make changes, copy the section/stanza you want to change from $SPLUNK_HOME/etc/system/default
@@ -4413,7 +4231,7 @@ css_class = EventRenderer2
 eventtype = japan_type
 priority = 1
 css_class = EventRenderer3
-#   Version 6.5.1.2 
+#   Version 6.5.Fiction 
 #
 # This file contains possible attribute/value pairs for configuring event rendering properties.
 #
@@ -4454,7 +4272,7 @@ result in the parent element of the event having an html attribute class with a 
 (for example, class="splEvent-foo"). You can externalize your css style rules for this in 
 $APP/appserver/static/application.css. For example, to make the text red you would add to 
 application.css:.splEvent-foo { color:red; }
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example eventdiscoverer.conf.  These settings are used to control
 # the discovery of common eventtypes used by the typelearner search command.
@@ -4473,7 +4291,7 @@ ignored_keywords = foo, bar, application, kate, charlie
 
 # Fields in this list are never considered for defining an eventtype.
 ignored_fields = pid, others, directory
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 
 # This file contains possible attributes and values you can use to configure
 # event discovery through the search command "typelearner."
@@ -4519,7 +4337,7 @@ important_keywords = <comma-separated list of terms>
   an important keyword.
 * Default = "abort, abstract, accept,..."
 * For the full default setting, see $SPLUNK_HOME/etc/system/default/eventdiscoverer.conf.
-#   Version 6.5.1.2 
+#   Version 6.5.Fiction 
 #
 # This file contains an example eventtypes.conf.  Use this file to configure custom eventtypes.
 #
@@ -4545,7 +4363,7 @@ search = error OR fatal
 
 [cisco-%code%]
 search = cisco
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains all possible attributes and value pairs for an
 # eventtypes.conf file.  Use this file to configure event types and their
@@ -4616,7 +4434,7 @@ color = <string>
 * Supported colors: none, et_blue, et_green, et_magenta, et_orange, 
   et_purple, et_red, et_sky, et_teal, et_yellow
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains an example fields.conf.  Use this file to configure
 # dynamic field extractions.
@@ -4640,7 +4458,7 @@ TOKENIZER = (\w[\w\.\-]*@[\w\.\-]*\w)
 
 [Cc]
 TOKENIZER = (\w[\w\.\-]*@[\w\.\-]*\w)
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute and value pairs for:
 #  * Telling Splunk how to handle multi-value fields.
@@ -4722,7 +4540,7 @@ INDEXED_VALUE = [true|false|<sed-cmd>|<simple-substitution-string>]
   it matches either 'myvalue' or 'source::*myvalue' terms).
 * Defaults to true.
 * NOTE: You only need to set indexed_value if indexed = false.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains an example indexes.conf.  Use this file to configure
 # indexing properties.
@@ -4939,7 +4757,7 @@ thawedPath=$SPLUNK_DB/main/thaweddb
 maxDataSize = auto_high_volume
 maxHotBuckets = 10
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains all possible options for an indexes.conf file.  Use
 # this file to configure Splunk's indexes and their properties.
@@ -6410,7 +6228,7 @@ rotatePeriodInSecs = <nonnegative integer>
 * Specifies period of trim operation for this volume.
 * If not set, the value of global rotatePeriodInSecs attribute is inherited.
 * Highest legal value is 4294967295
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example inputs.conf. Use this file to configure data inputs.
 #
@@ -6626,7 +6444,7 @@ startingNode = OU=Computers,DC=eng,DC=ad,DC=splunk,DC=com
 [admon://SecondTargetDC]
 targetDc = pri02.eng.ad.splunk.com
 startingNode = OU=Computers,DC=hr,DC=ad,DC=splunk,DC=com
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 
 # This file contains possible settings you can use to configure inputs,
 # distributed inputs such as forwarders, and file system monitoring in
@@ -9133,7 +8951,7 @@ schedule = <schedule>
 * How often to run the specified PowerShell command or script.
 * You can provide a valid cron schedule.
 * Defaults to running the command or script once, at startup.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains an example SPLUNK_HOME/etc/instance.cfg file; the
 # instance.cfg file is not to be modified or removed by user.  LEAVE THE
@@ -9142,7 +8960,7 @@ schedule = <schedule>
 
 [general]
 guid = B58A86D9-DF3D-4BF8-A426-DB85C231B699
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains the set of attributes and values you can expect to find in
 # the SPLUNK_HOME/etc/instance.cfg file; the instance.cfg file is not to be
@@ -9192,7 +9010,7 @@ guid = <GUID in all-uppercase>
 
 * The standard regexp to match an all-uppercase GUID is
   "[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}".
-#   Version 6.5.1.2 
+#   Version 6.5.Fiction 
 # CAUTION: Do not alter the settings in limits.conf unless you know what you are doing. 
 # Improperly configured limits may result in splunkd crashes and/or memory overuse.
 
@@ -9317,7 +9135,7 @@ enabled = true
 
 [search_optimization::predicate_merge]
 enabled = true
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for configuring limits for
 # search commands.
@@ -11713,7 +11531,7 @@ max_mem_usage_mb = <non-negative integer>
 max_mem_usage_mb = <non-negative integer>
 * overrides the default value for max_mem_usage_mb
 * See definition in [default] max_mem_usage_mb for more details
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains an example literals.conf, which is used to
 # configure the externalized strings in Splunk.
@@ -11728,7 +11546,7 @@ INSUFFICIENT_DISK_SPACE_ERROR = The server's free disk space is too low.  Indexi
 SERVER_RESTART_MESSAGE = This Splunk Server's configuration has been changed.  The server needs to be restarted by an administrator.
 UNABLE_TO_CONNECT_MESSAGE = Could not connect to splunkd at %s.
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains attribute/value pairs for configuring externalized strings
 # in literals.conf.
@@ -11765,7 +11583,7 @@ UNABLE_TO_CONNECT_MESSAGE = Could not connect to splunkd at %s.
 
 
 
-# Version 6.5.1.2
+# Version 6.5.Fiction
 #
 # ** FOR USE IN SPLUNK LIGHT ONLY
 #
@@ -11802,7 +11620,7 @@ flash = false
 enabled = 1
 keyphrase = GET
 color = 0xFFF
-# Version 6.5.1.2
+# Version 6.5.Fiction
 #
 # ** FOR USE IN SPLUNK LIGHT ONLY
 #
@@ -11854,7 +11672,7 @@ keyphrase = <string>
 
 enabled = <boolean>
 * A Boolean that determines if this keyword is enabled or not.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # Example macros.conf
 #
@@ -11906,7 +11724,7 @@ errormsg = foo must be greater than bar
 args = foo, bar
 definition = if (bar > 0, "$foo$ + $bar$", "$foo$ - $bar$")
 iseval = true
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for search language macros.
 
@@ -11965,7 +11783,7 @@ iseval = <true/false>
 
 description = <string>
 * OPTIONAL. Simple english description of what the macro does.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains an example messages.conf of attribute/value pairs for 
 # configuring externalized strings.
@@ -12025,7 +11843,7 @@ action       = Please refer to the License Usage Report view on license master '
 severity     = warn
 capabilities = license_edit
 help         = learnmore.license.features
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains attribute/value pairs for configuring externalized strings
 # in messages.conf.
@@ -12123,7 +11941,7 @@ capabilities = <capability list>
 help = <location string>
 * The location string to link users to specific documentation
 * Defaults to nothing
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains example multi key/value extraction configurations.
 #
@@ -12195,7 +12013,7 @@ body.replace = "(\w{3})\s+(\d{1,2})\s+(\d{2}:\d{2})" ="\1_\2_\3"
 body.ignore = _regex_ "^drwx.*",
 body.tokens  = _tokenize_, 0, " "
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute and value pairs for creating multikv
 # rules.  Multikv is the process of extracting events from table-like events,
@@ -12306,7 +12124,7 @@ OR
 * Defines a list of static tokens in a section.
 * This is useful for tables with no header, for example: the output of 'ls -lah' 
   which misses a header altogether.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains an example outputs.conf.  Use this file to configure
 # forwarding in a distributed set up.
@@ -12512,7 +12330,7 @@ _INDEX_AND_FORWARD_ROUTING=local
 [monitor:///var/log/httpd/]
 _TCP_ROUTING=indexers
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # Forwarders require outputs.conf; non-forwarding Splunk instances do not
 # use it.  It determines how the forwarder sends data to receiving Splunk
@@ -13254,7 +13072,7 @@ cxn_timeout = <seconds>
 master_uri = <uri>
 * URI and management port of the cluster master used in indexer discovery.
 * Example: https://SplunkMaster01.example.com:8089
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # The following are example passwords.conf configurations. Configure properties for
 # your custom application.
@@ -13279,7 +13097,7 @@ master_uri = <uri>
 
 [credential::testuser:]
 password = changeme
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file maintains the credential information for a given app in Splunk Enterprise.
 #
@@ -13304,7 +13122,7 @@ password = <password>
   Note that realm is optional
 * The password can be in clear text, however when saved from splunkd the
   password will always be encrypted
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains example registry monitor filters. To create your own
 # filter, use the information in procmon-filters.conf.spec.
@@ -13323,7 +13141,7 @@ hive = .*
 [not-splunk-optimize]
 proc = (?<!splunk-optimize.exe)$
 type = create|exit|image
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # *** DEPRECATED ***
 #
@@ -13351,7 +13169,7 @@ type = <string>
 
 hive = <string>
 * Not used in this context, but should always have value ".*"
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # The following are example props.conf configurations. Configure properties for
 # your data.
@@ -14802,7 +14620,7 @@ category = <string>
 * Field used to classify sourcetypes for organization in the front end. Case
   sensitive. Does not affect indexing behaviour.
 * Defaults to unset.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 
 [pubsub-server:deploymentServer]
 disabled=false
@@ -14811,7 +14629,7 @@ targetUri=somehost:8089
 [pubsub-server:internalbroker]
 disabled=false
 targetUri=direct
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values for configuring a client of
 # the PubSub system (broker).
@@ -14873,7 +14691,7 @@ targetUri = <IP:Port>|<hostname:Port>|direct
 * The keyword "direct" implies that the client is running on the same Splunk
   instance as the broker.
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains example REST endpoint configurations.
 #
@@ -14919,7 +14737,7 @@ capability=get_property_map
 match=/search
 capability=search
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute and value pairs for creating new
 # Representational State Transfer (REST) endpoints.
@@ -15268,7 +15086,7 @@ destination = <splunkbaseAPIURL>
 * protocol, subdomain, domain, port, and path of the splunkbase api used to browse apps
 * Defaults to https://splunkbase.splunk.com/api
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains example saved searches and alerts.
 #
@@ -15312,7 +15130,7 @@ dispatch.earliest_time = -3h
 search = index=_internal " error " NOT debug source=*/splunkd.log*
 dispatch.earliest_time = -24h
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for saved search entries in
 # savedsearches.conf.  You can configure saved searches by creating your own
@@ -16202,7 +16020,7 @@ nextrun  = <int>
 
 qualifiedSearch = <string>
 * not used anymore, the Splunk software computes this value during runtime
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # The following are example stanzas for searchbnf.conf configurations.
 #
@@ -16230,7 +16048,7 @@ description = The selfjoin joins each result with other results that\
   (default = 1, 0 means no limit).  'keepsingle' controls whether or not\
   results with a unique value for the join fields (and thus no other\
   results to join with) should be retained.  (default = false)
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 #
 # This file contain descriptions of stanzas and attribute/value pairs for
@@ -16344,7 +16162,7 @@ RELATED = <commands list>
 maintainer, appears-in, note, supports-multivalue, optout-in
 
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # The following are examples of segmentation configurations.
 #
@@ -16381,7 +16199,7 @@ FILTER = ^(.*?)(\n|$)
 [no-segmentation]
 LOOKAHEAD = 0
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for configuring
 # segmentation of events in segementers.conf.
@@ -16468,7 +16286,7 @@ MAJOR_COUNT = <integer>
 * After the specified number of major segments have been created, later ones
   are discarded without prejudice.
 * Default to -1.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains an example server.conf.  Use this file to configure SSL
 # and HTTP server options.
@@ -16567,7 +16385,7 @@ master_uri=https://SplunkMaster02.example.com:8089
 ############################################################################
 [httpServerListener:127.0.0.1:8090]
 ssl = false
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains the set of attributes and values you can use to
 # configure server options in server.conf.
@@ -19550,7 +19368,7 @@ replicate_search_peers = true|false
 * Add/remove search-server request is applied on all members 
   of a search head cluster, when this value to set to true.
 * Require a healty search head cluster with a captain.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # Example 1
 # Matches all clients and includes all apps in the server class
@@ -19667,7 +19485,7 @@ whitelist.select_field = 2
 whitelist.from_pathname = etc/system/local/server_list.csv
 whitelist.where_field = 1
 whitelist.where_equals = T1, T2, dc*
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values for defining server
 # classes to which deployment clients can belong. These attributes and
@@ -20082,7 +19900,7 @@ excludeFromUpdate = <path>[,<path>]...
   </serverClass>
 </deployment>
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 
 <!--
 # This configuration is used by deploymentClient to seed a Splunk installation with applications, at startup time.
@@ -20137,7 +19955,7 @@ excludeFromUpdate = <path>[,<path>]...
     </serviceClass>
 </deployment>
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 #
 
@@ -20326,7 +20144,7 @@ the value of a specified field.
 
 
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains an example source-classifier.conf.  Use this file to
 # configure classification
@@ -20346,7 +20164,7 @@ ignored_model_keywords = sun mon tue tues wed thurs fri sat sunday monday tuesda
 
 # terms to ignore when comparing a sourcename against a known sourcename
 ignored_filename_keywords = log logs com common event events little main message messages queue server splunk
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains all possible options for configuring settings for the
 # file classifier in source-classifier.conf.
@@ -20372,7 +20190,7 @@ ignored_filename_keywords = <space-separated list of terms>
 * Terms to ignore when comparing a new sourcename against a known
   sourcename, for the purpose of classifying a source.
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains an example sourcetypes.conf.  Use this file to configure
 # sourcetype models.
@@ -20401,7 +20219,7 @@ _source = /Users/bob/logs/bnf.x5
 _sourcetype = cadcamlog
 L----------- = 0.096899
 L-t<_EQ> = 0.016473
-#  Version 6.5.1.2
+#  Version 6.5.Fiction
 #
 # NOTE: sourcetypes.conf is a machine-generated file that stores the document
 # models used by the file classifier for creating source types.
@@ -20439,7 +20257,7 @@ _sourcetype = <value>
 
 _source = <value>
 * Specifies the source (filename) for the model.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 
 # splunk-launch.conf contains values used at startup time, by the splunk
 # command and by windows services.
@@ -20582,7 +20400,7 @@ SPLUNK_SERVER_NAME=<name>
 SPLUNK_WEB_NAME=<name>
 * Names the Python app server / web server/service.
 * Defaults to splunkweb (UNIX), or Splunkweb (Windows).
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example tags.conf.  Use this file to define tags for fields.
 #
@@ -20618,7 +20436,7 @@ firewall = enabled
 [seekPtr=1cb58000]
 EOF = enabled
 NOT_EOF = disabled
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for configuring tags.  Set
 # any number of tags for indexed or extracted fields.
@@ -20652,7 +20470,7 @@ NOT_EOF = disabled
   stanza.
 
 * WARNING: Do not quote the <tag> value: foo=enabled, not "foo"=enabled.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values for configuring global
 # telemetry settings. Please note that enabling these settings would enable
@@ -20672,7 +20490,7 @@ precheckSendAnonymizedUsage = false
 precheckSendLicenseUsage = true
 showOptInModal = true
 deprecatedConfig = false
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values for configuring global
 # telemetry settings. Please note that enabling these settings would enable
@@ -20736,7 +20554,7 @@ retryTransaction = <string>
 * Setting that is created if the telemetry conf updates cannot be delivered to
   the cluster master for the splunk_instrumentation app.
 * Defaults to an empty string
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example times.conf.  Use this file to create custom time ranges
 # that can be used while interacting with the search system.
@@ -20818,7 +20636,7 @@ sub_menu = Other options
 [other]
 label = Other options
 order = 202
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for creating custom time
 # ranges.
@@ -20889,7 +20707,7 @@ is_sub_menu = <boolean>
 * Stanzas containing this key can still be assigned an order value to set
   the placement within the main menu, but can not themselves have
   latest_time nor earliest_time keys.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example transactiontypes.conf.  Use this file as a template to
 # configure transactions types.
@@ -20911,7 +20729,7 @@ maxspan  = 10m
 maxpause = 5m
 fields  = userid
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains all possible attributes and value pairs for a
 # transactiontypes.conf file.  Use this file to configure transaction searches
@@ -21061,7 +20879,7 @@ search=<string>
   that must be retrieved to find transactions.
 * Example: sourcetype="sendmaill_sendmail"
 * Defaults to "*" (all events)
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example transforms.conf.  Use this file to create regexes and
 # rules for transforms.  Use this file in tandem with props.conf.
@@ -21267,7 +21085,7 @@ DEST_KEY = _raw
 CLONE_SOURCETYPE = masked_ip_addresses
 
 ###### BASIC MODULAR REGULAR EXPRESSIONS DEFINITION END ###########
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains attributes and values that you can use to configure
 # data transformations.  and event signing in transforms.conf.
@@ -21796,7 +21614,7 @@ _SYSLOG_ROUTING     : Comma separated list of syslog-stanza  names (from outputs
   choosing, including a descriptive name for why you use the key.
 * The entire stanza defaults to not being present, causing all keys not
   documented just above to be flagged.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains example of ui preferences for a view.
 #
@@ -21814,7 +21632,7 @@ _SYSLOG_ROUTING     : Comma separated list of syslog-stanza  names (from outputs
 [search]
 dispatch.earliest_time = @d
 dispatch.latest_time = now
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for ui preferences for a
 # view.
@@ -21909,7 +21727,7 @@ display.page.search.timeline.scale = [linear|log]
 display.page.search.showFields = 0 | 1
 display.page.home.showGettingStarted = 0 | 1
 display.page.search.searchHistoryTimeFilter = [0|@d|-7d@d|-30d@d]
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains the tours available for Splunk Onboarding
 #
@@ -21945,7 +21763,7 @@ stepElement3 = .test-selector
 stepClickEvent3 = mousedown
 stepClickElement3 = .test-click-element
 viewed = 0
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains the tours available for Splunk Onboarding
 #
@@ -22055,7 +21873,7 @@ stepClickEvent<int> = <click || mousedown || mouseup>
 stepClickElement<int> = <string>
 * The UI selector used for a DOM element used in conjunction with click above.
 * Optional
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example user-prefs.conf.  Use this file to configure settings
 # on a per-user basis for use by the Splunk Web UI.
@@ -22167,7 +21985,7 @@ default_earliest_time = <string>
 default_latest_time = <string>
 * Sets the global default time range across all apps, users, and roles on the search page.
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example user-seed.conf.  Use this file to create an initial
 # This is an example user-seed.conf.  Use this file to create an initial login.
@@ -22188,7 +22006,7 @@ default_latest_time = <string>
 [user_info]
 USERNAME = admin
 PASSWORD = myowndefaultPass
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # Specification for user-seed.conf.  Allows configuration of Splunk's
 # initial username and password.  Currently, only one user can be configured
@@ -22214,7 +22032,7 @@ USERNAME = <string>
 PASSWORD = <password>
           * Password you wish to set for that user.
           * Default is changeme.
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example viewstates.conf.
 #
@@ -22247,7 +22065,7 @@ SoftWrap_0_11_0.enable = true
 
 [dashboard:_current]
 TimeRangePicker_0_1_0.selected = All time
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file explains how to format viewstates.
 #
@@ -22285,7 +22103,7 @@ TimeRangePicker_0_1_0.selected = All time
 <module_id>.<setting_name> = <string>
 * The <module_id> is the runtime id of the UI module requesting persistence
 * The <setting_name> is the setting designated by <module_id> to persist
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains definitions for visualizations an app makes avialable
 # to the system. An app intending to share visualizations with the system
@@ -22339,7 +22157,7 @@ search_fragment = <string>
 * Required.
 * An example part of a search that formats the data correctly for the viz. Typically the last pipe(s) in a search query.
 * Defaults to ""
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example web.conf.  Use this file to configure data web
 # settings.
@@ -22368,7 +22186,7 @@ enableSplunkWebSSL = true
 privKeyPath = /home/user/certs/myprivatekey.pem
 caCertPath = /home/user/certs/mycacert.pem
 # NOTE: non-absolute paths are relative to $SPLUNK_HOME
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attributes and values you can use to configure
 # Splunk's web interface.
@@ -23484,7 +23302,7 @@ skipCSRFProtection = [0 | 1]
 * Defaults to 0
 * This should only be set on the login endpoint (which already contains
   sufficient auth credentials to avoid CSRF problems)
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example wmi.conf.  These settings are used to control inputs
 # from WMI providers. Refer to wmi.conf.spec and the documentation at
@@ -23583,7 +23401,7 @@ disabled = 0
 current_only = 1
 batch_size = 10
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for configuring Windows
 # Management Instrumentation (WMI) access from Splunk.
@@ -23748,7 +23566,7 @@ namespace = <string>
   namespace.
 * Defaults to root\cimv2.
 
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This is an example workflow_actions.conf.  These settings are used to
 # create workflow actions accessible in an event viewer.  Refer to
@@ -23836,7 +23654,7 @@ search.search_string = sourcetype=rails_app controller=$controller$ | timechart 
 search.target = blank
 search.view = charting
 type = search
-#   Version 6.5.1.2
+#   Version 6.5.Fiction
 #
 # This file contains possible attribute/value pairs for configuring workflow
 # actions in Splunk.
